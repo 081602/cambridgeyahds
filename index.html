@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cambridge Community Yard Sale — July 9</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    background: #faf9f6;
+    color: #2c2a24;
+    min-height: 100vh;
+  }
+ 
+  header {
+    background: #2c2a24;
+    color: #faf9f6;
+    padding: 2.5rem 1.5rem 2rem;
+    text-align: center;
+  }
+ 
+  header h1 {
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    font-weight: normal;
+    letter-spacing: 0.02em;
+    margin-bottom: 0.5rem;
+  }
+ 
+  header p {
+    font-size: 1.05rem;
+    color: #c8c4b8;
+    max-width: 560px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+ 
+  .date-badge {
+    display: inline-block;
+    margin-top: 1rem;
+    background: #e8a838;
+    color: #2c2a24;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.35rem 1rem;
+    border-radius: 2px;
+  }
+ 
+  nav {
+    background: #3d3a32;
+    display: flex;
+    justify-content: center;
+    gap: 0;
+  }
+ 
+  nav button {
+    background: none;
+    border: none;
+    color: #c8c4b8;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    transition: color 0.2s, background 0.2s;
+  }
+ 
+  nav button:hover, nav button.active {
+    color: #faf9f6;
+    background: #2c2a24;
+  }
+ 
+  main {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+ 
+  .section-title {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #888;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+ 
+  .listing-card {
+    border: 1px solid #e0ddd6;
+    border-radius: 4px;
+    padding: 1.1rem 1.25rem;
+    margin-bottom: 1rem;
+    background: #fff;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+ 
+  .listing-icon {
+    width: 38px;
+    height: 38px;
+    background: #fef3dc;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 18px;
+  }
+ 
+  .listing-info h3 {
+    font-size: 1.05rem;
+    font-weight: normal;
+    margin-bottom: 0.2rem;
+  }
+ 
+  .listing-info .time {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.82rem;
+    color: #888;
+    margin-bottom: 0.35rem;
+  }
+ 
+  .listing-info a {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.78rem;
+    color: #e8a838;
+    text-decoration: none;
+    letter-spacing: 0.04em;
+  }
+ 
+  .listing-info a:hover { text-decoration: underline; }
+ 
+  .empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #aaa;
+    font-style: italic;
+  }
+ 
+  /* Submission form */
+  .form-card {
+    background: #fff;
+    border: 1px solid #e0ddd6;
+    border-radius: 4px;
+    padding: 1.5rem;
+  }
+ 
+  .form-card p.intro {
+    font-size: 0.95rem;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+ 
+  .form-group {
+    margin-bottom: 1.2rem;
+  }
+ 
+  .form-group label {
+    display: block;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #666;
+    margin-bottom: 0.4rem;
+  }
+ 
+  .form-group input {
+    width: 100%;
+    padding: 0.6rem 0.85rem;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-family: Georgia, serif;
+    font-size: 0.95rem;
+    background: #faf9f6;
+    color: #2c2a24;
+    transition: border-color 0.2s;
+  }
+ 
+  .form-group input:focus {
+    outline: none;
+    border-color: #e8a838;
+  }
+ 
+  .time-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+ 
+  .submit-btn {
+    background: #2c2a24;
+    color: #faf9f6;
+    border: none;
+    padding: 0.75rem 1.75rem;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-top: 0.5rem;
+  }
+ 
+  .submit-btn:hover { background: #444; }
+ 
+  .success-msg {
+    display: none;
+    background: #edf7ed;
+    border: 1px solid #b8ddb8;
+    border-radius: 3px;
+    padding: 0.85rem 1rem;
+    font-size: 0.9rem;
+    color: #2d6a2d;
+    margin-top: 1rem;
+  }
+ 
+  /* Admin */
+  .admin-login {
+    max-width: 360px;
+    margin: 2rem auto;
+  }
+ 
+  .admin-card {
+    background: #fff;
+    border: 1px solid #e0ddd6;
+    border-radius: 4px;
+    padding: 1.75rem;
+  }
+ 
+  .admin-card h2 {
+    font-size: 1.1rem;
+    font-weight: normal;
+    margin-bottom: 1.25rem;
+  }
+ 
+  .pending-card {
+    background: #fff;
+    border: 1px solid #e0ddd6;
+    border-radius: 4px;
+    padding: 1.1rem 1.25rem;
+    margin-bottom: 0.85rem;
+  }
+ 
+  .pending-card h3 {
+    font-size: 1.05rem;
+    font-weight: normal;
+    margin-bottom: 0.25rem;
+  }
+ 
+  .pending-card .time {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.82rem;
+    color: #888;
+    margin-bottom: 0.75rem;
+  }
+ 
+  .action-row {
+    display: flex;
+    gap: 0.6rem;
+  }
+ 
+  .btn-approve {
+    background: #2d6a2d;
+    color: #fff;
+    border: none;
+    padding: 0.45rem 1rem;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.73rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+ 
+  .btn-reject {
+    background: #fff;
+    color: #a33;
+    border: 1px solid #d99;
+    padding: 0.45rem 1rem;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.73rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+ 
+  .btn-remove {
+    background: #fff;
+    color: #a33;
+    border: 1px solid #d99;
+    padding: 0.3rem 0.75rem;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+ 
+  .page { display: none; }
+  .page.active { display: block; }
+ 
+  .admin-section-title {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #888;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 0.5rem;
+    margin: 2rem 0 1rem;
+  }
+ 
+  .admin-section-title:first-child { margin-top: 0; }
+ 
+  .logout-btn {
+    background: none;
+    border: 1px solid #ccc;
+    color: #666;
+    padding: 0.35rem 0.9rem;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 0.73rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border-radius: 3px;
+    cursor: pointer;
+    float: right;
+    margin-top: -0.25rem;
+  }
+</style>
+</head>
+<body>
+ 
+<header>
+  <h1>Cambridge Community<br>Yard Sale Day</h1>
+  <p>Maximize your foot traffic by joining the neighborhood-wide yard sale. Post your street below and let the whole city find you.</p>
+  <div class="date-badge">Wednesday, July 9, 2025</div>
+</header>
+ 
+<nav>
+  <button class="active" onclick="showPage('listings')">Listings</button>
+  <button onclick="showPage('submit')">Post Your Sale</button>
+  <button onclick="showPage('admin-gate')">Admin</button>
+</nav>
+ 
+<main>
+ 
+  <!-- LISTINGS PAGE -->
+  <div id="page-listings" class="page active">
+    <div class="section-title">Confirmed Yard Sales</div>
+    <div id="listings-container">
+      <div class="empty-state">No listings yet — be the first to post your yard sale!</div>
+    </div>
+  </div>
+ 
+  <!-- SUBMIT PAGE -->
+  <div id="page-submit" class="page">
+    <div class="section-title">Post Your Yard Sale</div>
+    <div class="form-card">
+      <p class="intro">Share your street and hours so neighbors can find you. Your listing will appear after a quick review — usually within a day.</p>
+      <div class="form-group">
+        <label>Street Name</label>
+        <input type="text" id="input-street" placeholder="e.g. Elm Street">
+      </div>
+      <div class="form-group">
+        <label>Sale Hours</label>
+        <div class="time-row">
+          <input type="time" id="input-start" value="08:00">
+          <input type="time" id="input-end" value="13:00">
+        </div>
+      </div>
+      <button class="submit-btn" onclick="submitListing()">Submit Listing</button>
+      <div class="success-msg" id="submit-success">
+        Your listing has been submitted! It will appear on the public page once approved.
+      </div>
+    </div>
+  </div>
+ 
+  <!-- ADMIN LOGIN -->
+  <div id="page-admin-gate" class="page">
+    <div class="admin-login">
+      <div class="admin-card">
+        <h2>Admin Access</h2>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="admin-pw" placeholder="Enter password" onkeydown="if(event.key==='Enter') adminLogin()">
+        </div>
+        <button class="submit-btn" onclick="adminLogin()">Sign In</button>
+        <div id="login-error" style="display:none; color:#a33; font-size:0.85rem; margin-top:0.75rem;">Incorrect password.</div>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- ADMIN PANEL -->
+  <div id="page-admin" class="page">
+    <div class="admin-section-title">
+      Pending Approvals
+      <button class="logout-btn" onclick="adminLogout()">Log out</button>
+    </div>
+    <div id="pending-container">
+      <div class="empty-state">No pending submissions.</div>
+    </div>
+ 
+    <div class="admin-section-title">Approved Listings</div>
+    <div id="approved-admin-container">
+      <div class="empty-state">No approved listings yet.</div>
+    </div>
+  </div>
+ 
+</main>
+ 
+<script>
+  const ADMIN_PASSWORD = 'Sporting@2026';
+ 
+  function getState() {
+    try {
+      return JSON.parse(localStorage.getItem('yardsale_state') || '{"pending":[],"approved":[]}');
+    } catch(e) {
+      return { pending: [], approved: [] };
+    }
+  }
+ 
+  function saveState(state) {
+    localStorage.setItem('yardsale_state', JSON.stringify(state));
+  }
+ 
+  function formatTime(t) {
+    if (!t) return '';
+    const [h, m] = t.split(':');
+    const hour = parseInt(h);
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    const display = hour % 12 || 12;
+    return `${display}:${m} ${ampm}`;
+  }
+ 
+  function mapsLink(street) {
+    return `https://www.google.com/maps/search/${encodeURIComponent(street + ', Cambridge, MA')}`;
+  }
+ 
+  function showPage(name) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+ 
+    if (name === 'admin-gate') {
+      if (sessionStorage.getItem('admin_auth') === '1') {
+        name = 'admin';
+      }
+    }
+ 
+    document.getElementById('page-' + name).classList.add('active');
+    const buttons = document.querySelectorAll('nav button');
+    const map = { listings: 0, submit: 1, 'admin-gate': 2, admin: 2 };
+    if (map[name] !== undefined) buttons[map[name]].classList.add('active');
+ 
+    if (name === 'listings') renderListings();
+    if (name === 'admin') renderAdmin();
+  }
+ 
+  function renderListings() {
+    const state = getState();
+    const container = document.getElementById('listings-container');
+    if (!state.approved.length) {
+      container.innerHTML = '<div class="empty-state">No listings yet — be the first to post your yard sale!</div>';
+      return;
+    }
+    container.innerHTML = state.approved.map(item => `
+      <div class="listing-card">
+        <div class="listing-icon">&#x1F3EA;</div>
+        <div class="listing-info">
+          <h3>${escHtml(item.street)}</h3>
+          <div class="time">${formatTime(item.start)} – ${formatTime(item.end)}</div>
+          <a href="${mapsLink(item.street)}" target="_blank">View on Google Maps ↗</a>
+        </div>
+      </div>
+    `).join('');
+  }
+ 
+  function renderAdmin() {
+    const state = getState();
+ 
+    const pc = document.getElementById('pending-container');
+    if (!state.pending.length) {
+      pc.innerHTML = '<div class="empty-state">No pending submissions.</div>';
+    } else {
+      pc.innerHTML = state.pending.map((item, i) => `
+        <div class="pending-card">
+          <h3>${escHtml(item.street)}</h3>
+          <div class="time">${formatTime(item.start)} – ${formatTime(item.end)}</div>
+          <div class="action-row">
+            <button class="btn-approve" onclick="approve(${i})">Approve</button>
+            <button class="btn-reject" onclick="reject(${i})">Reject</button>
+          </div>
+        </div>
+      `).join('');
+    }
+ 
+    const ac = document.getElementById('approved-admin-container');
+    if (!state.approved.length) {
+      ac.innerHTML = '<div class="empty-state">No approved listings yet.</div>';
+    } else {
+      ac.innerHTML = state.approved.map((item, i) => `
+        <div class="listing-card">
+          <div class="listing-icon">&#x1F3EA;</div>
+          <div class="listing-info">
+            <h3>${escHtml(item.street)}</h3>
+            <div class="time">${formatTime(item.start)} – ${formatTime(item.end)}</div>
+            <a href="${mapsLink(item.street)}" target="_blank">View on Google Maps ↗</a>
+          </div>
+          <button class="btn-remove" onclick="removeListing(${i})">Remove</button>
+        </div>
+      `).join('');
+    }
+  }
+ 
+  function submitListing() {
+    const street = document.getElementById('input-street').value.trim();
+    const start = document.getElementById('input-start').value;
+    const end = document.getElementById('input-end').value;
+    if (!street) { alert('Please enter a street name.'); return; }
+    const state = getState();
+    state.pending.push({ street, start, end, submitted: Date.now() });
+    saveState(state);
+    document.getElementById('input-street').value = '';
+    document.getElementById('submit-success').style.display = 'block';
+    setTimeout(() => document.getElementById('submit-success').style.display = 'none', 5000);
+  }
+ 
+  function approve(i) {
+    const state = getState();
+    const item = state.pending.splice(i, 1)[0];
+    state.approved.push(item);
+    saveState(state);
+    renderAdmin();
+  }
+ 
+  function reject(i) {
+    const state = getState();
+    state.pending.splice(i, 1);
+    saveState(state);
+    renderAdmin();
+  }
+ 
+  function removeListing(i) {
+    if (!confirm('Remove this listing from the public page?')) return;
+    const state = getState();
+    state.approved.splice(i, 1);
+    saveState(state);
+    renderAdmin();
+  }
+ 
+  function adminLogin() {
+    const pw = document.getElementById('admin-pw').value;
+    if (pw === ADMIN_PASSWORD) {
+      sessionStorage.setItem('admin_auth', '1');
+      document.getElementById('admin-pw').value = '';
+      document.getElementById('login-error').style.display = 'none';
+      showPage('admin');
+    } else {
+      document.getElementById('login-error').style.display = 'block';
+    }
+  }
+ 
+  function adminLogout() {
+    sessionStorage.removeItem('admin_auth');
+    showPage('admin-gate');
+  }
+ 
+  function escHtml(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+ 
+  renderListings();
+</script>
+</body>
+</html>
