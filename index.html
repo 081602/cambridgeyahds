@@ -11,8 +11,8 @@
   header h1 { font-size: clamp(1.8rem, 5vw, 3rem); font-weight: normal; letter-spacing: 0.02em; margin-bottom: 0.5rem; }
   header p { font-size: 1.05rem; color: #c8c4b8; max-width: 560px; margin: 0 auto; line-height: 1.6; }
   .date-badge { display: inline-block; margin-top: 1rem; background: #e8a838; color: #2c2a24; font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.35rem 1rem; border-radius: 2px; }
-  nav { background: #3d3a32; display: flex; justify-content: center; }
-  nav button { background: none; border: none; color: #c8c4b8; font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.75rem 1.5rem; cursor: pointer; transition: color 0.2s, background 0.2s; }
+  nav { background: #3d3a32; display: flex; justify-content: center; flex-wrap: wrap; }
+  nav button { background: none; border: none; color: #c8c4b8; font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.75rem 1.25rem; cursor: pointer; transition: color 0.2s, background 0.2s; }
   nav button:hover, nav button.active { color: #faf9f6; background: #2c2a24; }
   main { max-width: 720px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
   .section-title { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #888; border-bottom: 1px solid #ddd; padding-bottom: 0.5rem; margin-bottom: 1.5rem; }
@@ -45,11 +45,15 @@
   .pending-card h3 { font-size: 1.05rem; font-weight: normal; margin-bottom: 0.25rem; }
   .pending-card .time { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 0.82rem; color: #888; margin-bottom: 0.35rem; }
   .pending-card .notes { font-size: 0.88rem; color: #666; line-height: 1.5; margin-bottom: 0.75rem; font-style: italic; }
+  .message-card { background: #fff; border: 1px solid #e0ddd6; border-radius: 4px; padding: 1.1rem 1.25rem; margin-bottom: 0.85rem; }
+  .message-card .msg-meta { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 0.82rem; color: #888; margin-bottom: 0.5rem; }
+  .message-card .msg-body { font-size: 0.95rem; line-height: 1.6; color: #2c2a24; margin-bottom: 0.75rem; }
   .action-row { display: flex; gap: 0.6rem; }
   .btn-approve { background: #2d6a2d; color: #fff; border: none; padding: 0.45rem 1rem; font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 0.73rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; border-radius: 3px; cursor: pointer; }
-  .btn-approve:disabled, .btn-reject:disabled, .btn-remove:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-approve:disabled, .btn-reject:disabled, .btn-remove:disabled, .btn-delete:disabled { opacity: 0.5; cursor: not-allowed; }
   .btn-reject { background: #fff; color: #a33; border: 1px solid #d99; padding: 0.45rem 1rem; font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 0.73rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; border-radius: 3px; cursor: pointer; }
   .btn-remove { background: #fff; color: #a33; border: 1px solid #d99; padding: 0.3rem 0.75rem; font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; border-radius: 3px; cursor: pointer; margin-left: auto; flex-shrink: 0; }
+  .btn-delete { background: #fff; color: #a33; border: 1px solid #d99; padding: 0.3rem 0.75rem; font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; border-radius: 3px; cursor: pointer; }
   .page { display: none; }
   .page.active { display: block; }
   .admin-section-title { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #888; border-bottom: 1px solid #ddd; padding-bottom: 0.5rem; margin: 2rem 0 1rem; display: flex; align-items: center; justify-content: space-between; }
@@ -58,6 +62,8 @@
 </style>
 </head>
 <body>
+
+<script>if(location.protocol !== "https:") location.replace("https://" + location.href.slice(7));</script>
 
 <header>
   <h1>Cambridge YAHDS<br>Cambridge Community<br>Yard Sale Day</h1>
@@ -68,6 +74,7 @@
 <nav>
   <button class="active" onclick="showPage('listings')">Listings</button>
   <button onclick="showPage('submit')">Post Your Sale</button>
+  <button onclick="showPage('contact')">Contact Us</button>
   <button onclick="showPage('admin-gate')">Admin</button>
 </nav>
 
@@ -102,6 +109,28 @@
     </div>
   </div>
 
+  <div id="page-contact" class="page">
+    <div class="section-title">Contact Us</div>
+    <div class="form-card">
+      <p class="intro">Have a question or comment? Send us a message and we'll get back to you.</p>
+      <div class="form-group">
+        <label>Your Name</label>
+        <input type="text" id="contact-name" placeholder="e.g. Jane Smith">
+      </div>
+      <div class="form-group">
+        <label>Your Email</label>
+        <input type="email" id="contact-email" placeholder="e.g. jane@example.com">
+      </div>
+      <div class="form-group">
+        <label>Message</label>
+        <textarea id="contact-message" style="min-height: 120px;" placeholder="What would you like to tell us?"></textarea>
+      </div>
+      <button class="submit-btn" id="contact-btn" onclick="submitContact()">Send Message</button>
+      <div class="success-msg" id="contact-success">Your message has been sent! We'll get back to you soon.</div>
+      <div class="error-msg" id="contact-error">Something went wrong. Please try again.</div>
+    </div>
+  </div>
+
   <div id="page-admin-gate" class="page">
     <div class="admin-login">
       <div class="admin-card">
@@ -122,12 +151,16 @@
       <button class="logout-btn" onclick="adminLogout()">Log out</button>
     </div>
     <div id="pending-container"><div class="loading-state">Loading...</div></div>
+
     <div class="admin-section-title"><span>Approved Listings</span></div>
     <div id="approved-admin-container"><div class="loading-state">Loading...</div></div>
+
+    <div class="admin-section-title"><span>Contact Messages</span></div>
+    <div id="messages-container"><div class="loading-state">Loading...</div></div>
   </div>
 </main>
 
-<script>if(location.protocol !== "https:") location.replace("https://" + location.href.slice(7));</script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
   import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
@@ -144,7 +177,10 @@
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
   const listingsCol = collection(db, 'listings');
+  const messagesCol = collection(db, 'messages');
   const ADMIN_PASSWORD = 'Sporting@2026';
+
+  emailjs.init('SH-gloD3QGncR2gDb');
 
   function formatTime(t) {
     if (!t) return '';
@@ -163,12 +199,17 @@
     return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
+  function formatDate(ts) {
+    if (!ts) return '';
+    return new Date(ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' });
+  }
+
   window.showPage = function(name) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
     if (name === 'admin-gate' && sessionStorage.getItem('admin_auth') === '1') name = 'admin';
     document.getElementById('page-' + name).classList.add('active');
-    const map = { listings: 0, submit: 1, 'admin-gate': 2, admin: 2 };
+    const map = { listings: 0, submit: 1, contact: 2, 'admin-gate': 3, admin: 3 };
     if (map[name] !== undefined) document.querySelectorAll('nav button')[map[name]].classList.add('active');
     if (name === 'listings') renderListings();
     if (name === 'admin') renderAdmin();
@@ -205,6 +246,7 @@
   async function renderAdmin() {
     document.getElementById('pending-container').innerHTML = '<div class="loading-state">Loading...</div>';
     document.getElementById('approved-admin-container').innerHTML = '<div class="loading-state">Loading...</div>';
+    document.getElementById('messages-container').innerHTML = '<div class="loading-state">Loading...</div>';
     try {
       const snap = await getDocs(listingsCol);
       const pending = [];
@@ -248,6 +290,23 @@
     } catch(e) {
       document.getElementById('pending-container').innerHTML = '<div class="empty-state">Error loading. Please refresh.</div>';
     }
+
+    try {
+      const msgSnap = await getDocs(messagesCol);
+      const messages = msgSnap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a,b) => b.submitted - a.submitted);
+      document.getElementById('messages-container').innerHTML = messages.length
+        ? messages.map(msg => `
+            <div class="message-card">
+              <div class="msg-meta"><strong>${escHtml(msg.name)}</strong> &lt;${escHtml(msg.email)}&gt; &mdash; ${formatDate(msg.submitted)}</div>
+              <div class="msg-body">${escHtml(msg.message)}</div>
+              <div class="action-row">
+                <button class="btn-delete" onclick="window.deleteMessage('${msg.id}')">Delete</button>
+              </div>
+            </div>`).join('')
+        : '<div class="empty-state">No messages yet.</div>';
+    } catch(e) {
+      document.getElementById('messages-container').innerHTML = '<div class="empty-state">Error loading messages.</div>';
+    }
   }
 
   window.submitListing = async function() {
@@ -273,6 +332,34 @@
     btn.textContent = 'Submit Listing';
   }
 
+  window.submitContact = async function() {
+    const name = document.getElementById('contact-name').value.trim();
+    const email = document.getElementById('contact-email').value.trim();
+    const message = document.getElementById('contact-message').value.trim();
+    if (!name || !email || !message) { alert('Please fill in all fields.'); return; }
+    const btn = document.getElementById('contact-btn');
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+    try {
+      await addDoc(messagesCol, { name, email, message, submitted: Date.now() });
+      await emailjs.send('service_h0zuuxo', 'template_7ed65nx', {
+        from_name: name,
+        from_email: email,
+        message: message
+      });
+      document.getElementById('contact-name').value = '';
+      document.getElementById('contact-email').value = '';
+      document.getElementById('contact-message').value = '';
+      document.getElementById('contact-success').style.display = 'block';
+      document.getElementById('contact-error').style.display = 'none';
+      setTimeout(() => document.getElementById('contact-success').style.display = 'none', 5000);
+    } catch(e) {
+      document.getElementById('contact-error').style.display = 'block';
+    }
+    btn.disabled = false;
+    btn.textContent = 'Send Message';
+  }
+
   window.approve = async function(id) {
     await updateDoc(doc(db, 'listings', id), { status: 'approved' });
     renderAdmin();
@@ -286,6 +373,12 @@
   window.removeListing = async function(id) {
     if (!confirm('Remove this listing from the public page?')) return;
     await deleteDoc(doc(db, 'listings', id));
+    renderAdmin();
+  }
+
+  window.deleteMessage = async function(id) {
+    if (!confirm('Delete this message?')) return;
+    await deleteDoc(doc(db, 'messages', id));
     renderAdmin();
   }
 
