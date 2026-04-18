@@ -153,11 +153,15 @@
       <div class="admin-card">
         <h2>Admin Access</h2>
         <div class="form-group">
-          <label>Password</label>
-          <input type="password" id="admin-pw" placeholder="Enter password" onkeydown="if(event.key==='Enter') adminLogin()">
+          <label>Email</label>
+          <input type="email" id="admin-email" placeholder="Enter your email" onkeydown="if(event.key==='Enter') adminLogin()">
         </div>
-        <button class="submit-btn" onclick="adminLogin()">Sign In</button>
-        <div id="login-error" style="display:none; color:#a33; font-size:0.85rem; margin-top:0.75rem;">Incorrect password.</div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="admin-pw" placeholder="Enter your password" onkeydown="if(event.key==='Enter') adminLogin()">
+        </div>
+        <button class="submit-btn" id="login-btn" onclick="adminLogin()">Sign In</button>
+        <div id="login-error" style="display:none; color:#a33; font-size:0.85rem; margin-top:0.75rem;">Incorrect email or password.</div>
       </div>
     </div>
   </div>
@@ -179,6 +183,7 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
   import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyDBGsmWojHA7tL2IkNNOKx1AxFLfmCubxg",
@@ -191,9 +196,9 @@
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
+  const auth = getAuth(app);
   const listingsCol = collection(db, 'listings');
   const messagesCol = collection(db, 'messages');
-  const ADMIN_PASSWORD = 'Sporting@2026';
 
   emailjs.init('SH-gloD3QGncR2gDb');
 
@@ -222,7 +227,7 @@
   window.showPage = function(name) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-    if (name === 'admin-gate' && sessionStorage.getItem('admin_auth') === '1') name = 'admin';
+    if (name === 'admin-gate' && auth.currentUser) name = 'admin';
     document.getElementById('page-' + name).classList.add('active');
     const map = { listings: 0, submit: 1, why: 2, contact: 3, 'admin-gate': 4, admin: 4 };
     if (map[name] !== undefined) document.querySelectorAll('nav button')[map[name]].classList.add('active');
@@ -393,20 +398,27 @@
     renderAdmin();
   }
 
-  window.adminLogin = function() {
+  window.adminLogin = async function() {
+    const email = document.getElementById('admin-email').value.trim();
     const pw = document.getElementById('admin-pw').value;
-    if (pw === ADMIN_PASSWORD) {
-      sessionStorage.setItem('admin_auth', '1');
+    const btn = document.getElementById('login-btn');
+    btn.disabled = true;
+    btn.textContent = 'Signing in...';
+    try {
+      await signInWithEmailAndPassword(auth, email, pw);
+      document.getElementById('admin-email').value = '';
       document.getElementById('admin-pw').value = '';
       document.getElementById('login-error').style.display = 'none';
       window.showPage('admin');
-    } else {
+    } catch(e) {
       document.getElementById('login-error').style.display = 'block';
     }
+    btn.disabled = false;
+    btn.textContent = 'Sign In';
   }
 
-  window.adminLogout = function() {
-    sessionStorage.removeItem('admin_auth');
+  window.adminLogout = async function() {
+    await signOut(auth);
     window.showPage('admin-gate');
   }
 
