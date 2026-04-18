@@ -10,7 +10,7 @@
   header { background: #2c2a24; color: #faf9f6; padding: 2.5rem 1.5rem 2rem; text-align: center; }
   header h1 { font-size: clamp(1.8rem, 5vw, 3rem); font-weight: normal; letter-spacing: 0.02em; margin-bottom: 0.5rem; }
   header p { font-size: 1.05rem; color: #c8c4b8; max-width: 560px; margin: 0 auto; line-height: 1.6; }
-  .date-badge { display: inline-block; margin-top: 1rem; background: #e8a838; color: #2c2a24; font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.35rem 1rem; border-radius: 2px; }
+  .date-badge { display: inline-block; margin-top: 1rem; background: #e8a838; color: #2c2a24; font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 1rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.45rem 1.25rem; border-radius: 2px; }
   nav { background: #3d3a32; display: flex; justify-content: center; flex-wrap: wrap; }
   nav button { background: none; border: none; color: #c8c4b8; font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.75rem 1.25rem; cursor: pointer; transition: color 0.2s, background 0.2s; }
   nav button:hover, nav button.active { color: #faf9f6; background: #2c2a24; }
@@ -59,6 +59,10 @@
   .admin-section-title { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #888; border-bottom: 1px solid #ddd; padding-bottom: 0.5rem; margin: 2rem 0 1rem; display: flex; align-items: center; justify-content: space-between; }
   .admin-section-title:first-child { margin-top: 0; }
   .logout-btn { background: none; border: 1px solid #ccc; color: #666; padding: 0.35rem 0.9rem; font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 0.73rem; letter-spacing: 0.08em; text-transform: uppercase; border-radius: 3px; cursor: pointer; }
+  .why-card { background: #fff; border: 1px solid #e0ddd6; border-radius: 4px; padding: 2rem; }
+  .why-card p { font-size: 1rem; line-height: 1.85; color: #2c2a24; margin-bottom: 1.25rem; }
+  .why-card p:last-child { margin-bottom: 0; }
+  .why-card .highlight { background: #fef3dc; border-left: 3px solid #e8a838; padding: 1rem 1.25rem; border-radius: 0 4px 4px 0; margin: 1.5rem 0; font-style: italic; color: #5a4a1a; line-height: 1.7; }
 </style>
 </head>
 <body>
@@ -74,6 +78,7 @@
 <nav>
   <button class="active" onclick="showPage('listings')">Listings</button>
   <button onclick="showPage('submit')">Post Your Sale</button>
+  <button onclick="showPage('why')">Why CambridgeYAHDS</button>
   <button onclick="showPage('contact')">Contact Us</button>
   <button onclick="showPage('admin-gate')">Admin</button>
 </nav>
@@ -106,6 +111,19 @@
       <button class="submit-btn" id="submit-btn" onclick="submitListing()">Submit Listing</button>
       <div class="success-msg" id="submit-success">Your listing has been submitted! It will appear on the public page once approved.</div>
       <div class="error-msg" id="submit-error">Something went wrong. Please try again.</div>
+    </div>
+  </div>
+
+  <div id="page-why" class="page">
+    <div class="section-title">Why CambridgeYAHDS</div>
+    <div class="why-card">
+      <p>The idea for CambridgeYAHDS was born during a visit to Warrensburg, New York, a small town in the Adirondacks that does something remarkable every fall: for three days, it seems like everyone and their cousin throws open their garage doors for the <em>World's Largest Garage Sale</em>. Streets fill with tables, neighbors become vendors, and the whole town transforms into one giant, glorious treasure hunt.</p>
+      <div class="highlight">
+        We came home thinking: why can't Cambridge do something like this?
+      </div>
+      <p>Of course, Cambridge has its own twist on things. Garages are a bit harder to come by around here — and truthfully, yards can be scarce too! But that's never stopped Cambridge from doing things its own way. Whether you've got a sprawling backyard, a front stoop, or just a folding table on the sidewalk, you're welcome to join in.</p>
+      <p>This June 6th, we're hoping to start a tradition — a city-wide day where neighbors dig out the things they no longer need, set up wherever they can, and let the whole community come find them. Post your street, spread the word, and let's see what Cambridge can do.</p>
+      <p>We look forward to making this the first of many!</p>
     </div>
   </div>
 
@@ -151,10 +169,8 @@
       <button class="logout-btn" onclick="adminLogout()">Log out</button>
     </div>
     <div id="pending-container"><div class="loading-state">Loading...</div></div>
-
     <div class="admin-section-title"><span>Approved Listings</span></div>
     <div id="approved-admin-container"><div class="loading-state">Loading...</div></div>
-
     <div class="admin-section-title"><span>Contact Messages</span></div>
     <div id="messages-container"><div class="loading-state">Loading...</div></div>
   </div>
@@ -209,7 +225,7 @@
     document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
     if (name === 'admin-gate' && sessionStorage.getItem('admin_auth') === '1') name = 'admin';
     document.getElementById('page-' + name).classList.add('active');
-    const map = { listings: 0, submit: 1, contact: 2, 'admin-gate': 3, admin: 3 };
+    const map = { listings: 0, submit: 1, why: 2, contact: 3, 'admin-gate': 4, admin: 4 };
     if (map[name] !== undefined) document.querySelectorAll('nav button')[map[name]].classList.add('active');
     if (name === 'listings') renderListings();
     if (name === 'admin') renderAdmin();
@@ -342,11 +358,7 @@
     btn.textContent = 'Sending...';
     try {
       await addDoc(messagesCol, { name, email, message, submitted: Date.now() });
-      await emailjs.send('service_h0zuuxo', 'template_7ed65nx', {
-        from_name: name,
-        from_email: email,
-        message: message
-      });
+      await emailjs.send('service_h0zuuxo', 'template_7ed65nx', { from_name: name, from_email: email, message: message });
       document.getElementById('contact-name').value = '';
       document.getElementById('contact-email').value = '';
       document.getElementById('contact-message').value = '';
