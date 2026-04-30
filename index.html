@@ -340,6 +340,12 @@
     btn.textContent = 'Submitting...';
     try {
       await addDoc(listingsCol, { street, start, end, notes, status: 'pending', submitted: Date.now() });
+      await emailjs.send('service_h0zuuxo', 'template_33ssz7x', {
+        street: street,
+        start: start,
+        end: end,
+        notes: notes || 'Not specified'
+      });
       document.getElementById('input-street').value = '';
       document.getElementById('input-notes').value = '';
       document.getElementById('submit-success').style.display = 'block';
