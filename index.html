@@ -66,15 +66,12 @@
 </style>
 </head>
 <body>
-
 <script>if(location.protocol !== "https:") location.replace("https://" + location.href.slice(7));</script>
-
 <header>
   <h1>Cambridge YAHDS<br>Cambridge Community<br>Yard Sale Day</h1>
   <p>Maximize your foot traffic by joining the neighborhood-wide yard sale. Post your street below and let the whole city find you.</p>
   <div class="date-badge">Saturday, June 6, 2026</div>
 </header>
-
 <nav>
   <button class="active" onclick="showPage('listings')">Listings</button>
   <button onclick="showPage('submit')">Post Your Sale</button>
@@ -82,38 +79,24 @@
   <button onclick="showPage('contact')">Contact Us</button>
   <button onclick="showPage('admin-gate')">Admin</button>
 </nav>
-
 <main>
   <div id="page-listings" class="page active">
     <div class="section-title">Confirmed Yard Sales</div>
     <div id="listings-container"><div class="loading-state">Loading listings...</div></div>
   </div>
-
   <div id="page-submit" class="page">
     <div class="section-title">Post Your Yard Sale</div>
     <div class="form-card">
       <p class="intro">Share your street and hours so neighbors can find you. You're also welcome to add your house number, but it's not required. Your listing will appear after a quick review — usually within a day.</p>
-      <div class="form-group">
-        <label>Street Name</label>
-        <input type="text" id="input-street" placeholder="e.g. Elm Street">
-      </div>
-      <div class="form-group">
-        <label>Sale Hours</label>
-        <div class="time-row">
-          <input type="time" id="input-start" value="08:00">
-          <input type="time" id="input-end" value="13:00">
-        </div>
-      </div>
-      <div class="form-group">
-        <label>What are you selling? <span class="optional">optional</span></label>
-        <textarea id="input-notes" placeholder="e.g. Furniture, kids clothes, books, tools, vintage records..."></textarea>
-      </div>
+      <div class="form-group"><label>Street Name</label><input type="text" id="input-street" placeholder="e.g. Elm Street"></div>
+      <div class="form-group"><label>Sale Hours</label><div class="time-row"><input type="time" id="input-start" value="08:00"><input type="time" id="input-end" value="13:00"></div></div>
+      <div class="form-group"><label>What are you selling? <span class="optional">optional</span></label><textarea id="input-notes" placeholder="e.g. Furniture, kids clothes, books, tools, vintage records..."></textarea></div>
+      <div class="form-group"><label>Email Address <span class="optional">optional</span></label><input type="email" id="input-email" placeholder="Enter your email address if you want to be notified of any updates/changes to the event"></div>
       <button class="submit-btn" id="submit-btn" onclick="submitListing()">Submit Listing</button>
       <div class="success-msg" id="submit-success">Your listing has been submitted! It will appear on the public page once approved.</div>
       <div class="error-msg" id="submit-error">Something went wrong. Please try again.</div>
     </div>
   </div>
-
   <div id="page-why" class="page">
     <div class="section-title">Why CambridgeYAHDS</div>
     <div class="why-card">
@@ -125,52 +108,29 @@
       <p>Thanks!</p>
     </div>
   </div>
-
   <div id="page-contact" class="page">
     <div class="section-title">Contact Us</div>
     <div class="form-card">
       <p class="intro">Have a question or comment? Send us a message and we'll get back to you.</p>
-      <div class="form-group">
-        <label>Your Name</label>
-        <input type="text" id="contact-name" placeholder="e.g. Jane Smith">
-      </div>
-      <div class="form-group">
-        <label>Your Email</label>
-        <input type="email" id="contact-email" placeholder="e.g. jane@example.com">
-      </div>
-      <div class="form-group">
-        <label>Message</label>
-        <textarea id="contact-message" style="min-height: 120px;" placeholder="What would you like to tell us?"></textarea>
-      </div>
+      <div class="form-group"><label>Your Name</label><input type="text" id="contact-name" placeholder="e.g. Jane Smith"></div>
+      <div class="form-group"><label>Your Email</label><input type="email" id="contact-email" placeholder="e.g. jane@example.com"></div>
+      <div class="form-group"><label>Message</label><textarea id="contact-message" style="min-height: 120px;" placeholder="What would you like to tell us?"></textarea></div>
       <button class="submit-btn" id="contact-btn" onclick="submitContact()">Send Message</button>
       <div class="success-msg" id="contact-success">Your message has been sent! We'll get back to you soon.</div>
       <div class="error-msg" id="contact-error">Something went wrong. Please try again.</div>
     </div>
   </div>
-
   <div id="page-admin-gate" class="page">
-    <div class="admin-login">
-      <div class="admin-card">
-        <h2>Admin Access</h2>
-        <div class="form-group">
-          <label>Email</label>
-          <input type="email" id="admin-email" placeholder="Enter your email" onkeydown="if(event.key==='Enter') adminLogin()">
-        </div>
-        <div class="form-group">
-          <label>Password</label>
-          <input type="password" id="admin-pw" placeholder="Enter your password" onkeydown="if(event.key==='Enter') adminLogin()">
-        </div>
-        <button class="submit-btn" id="login-btn" onclick="adminLogin()">Sign In</button>
-        <div id="login-error" style="display:none; color:#a33; font-size:0.85rem; margin-top:0.75rem;">Incorrect email or password.</div>
-      </div>
-    </div>
+    <div class="admin-login"><div class="admin-card">
+      <h2>Admin Access</h2>
+      <div class="form-group"><label>Email</label><input type="email" id="admin-email" placeholder="Enter your email" onkeydown="if(event.key==='Enter') adminLogin()"></div>
+      <div class="form-group"><label>Password</label><input type="password" id="admin-pw" placeholder="Enter your password" onkeydown="if(event.key==='Enter') adminLogin()"></div>
+      <button class="submit-btn" id="login-btn" onclick="adminLogin()">Sign In</button>
+      <div id="login-error" style="display:none; color:#a33; font-size:0.85rem; margin-top:0.75rem;">Incorrect email or password.</div>
+    </div></div>
   </div>
-
   <div id="page-admin" class="page">
-    <div class="admin-section-title">
-      <span>Pending Approvals</span>
-      <button class="logout-btn" onclick="adminLogout()">Log out</button>
-    </div>
+    <div class="admin-section-title"><span>Pending Approvals</span><button class="logout-btn" onclick="adminLogout()">Log out</button></div>
     <div id="pending-container"><div class="loading-state">Loading...</div></div>
     <div class="admin-section-title"><span>Approved Listings</span></div>
     <div id="approved-admin-container"><div class="loading-state">Loading...</div></div>
@@ -178,256 +138,104 @@
     <div id="messages-container"><div class="loading-state">Loading...</div></div>
   </div>
 </main>
-
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
   import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
   import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyDBGsmWojHA7tL2IkNNOKx1AxFLfmCubxg",
-    authDomain: "cambridgeyahds.firebaseapp.com",
-    projectId: "cambridgeyahds",
-    storageBucket: "cambridgeyahds.firebasestorage.app",
-    messagingSenderId: "914761786645",
-    appId: "1:914761786645:web:628aaee91722eff8c2f51c"
-  };
-
+  const firebaseConfig = { apiKey: "AIzaSyDBGsmWojHA7tL2IkNNOKx1AxFLfmCubxg", authDomain: "cambridgeyahds.firebaseapp.com", projectId: "cambridgeyahds", storageBucket: "cambridgeyahds.firebasestorage.app", messagingSenderId: "914761786645", appId: "1:914761786645:web:628aaee91722eff8c2f51c" };
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
   const auth = getAuth(app);
   const listingsCol = collection(db, 'listings');
   const messagesCol = collection(db, 'messages');
-
   emailjs.init('SH-gloD3QGncR2gDb');
-
-  function formatTime(t) {
-    if (!t) return '';
-    const [h, m] = t.split(':');
-    const hour = parseInt(h);
-    const ampm = hour >= 12 ? 'PM' : 'AM';
-    const display = hour % 12 || 12;
-    return `${display}:${m} ${ampm}`;
-  }
-
-  function mapsLink(street) {
-    return `https://www.google.com/maps/search/${encodeURIComponent(street + ', Cambridge, MA')}`;
-  }
-
-  function escHtml(str) {
-    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
-
-  function formatDate(ts) {
-    if (!ts) return '';
-    return new Date(ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' });
-  }
-
+  function formatTime(t) { if (!t) return ''; const [h, m] = t.split(':'); const hour = parseInt(h); const ampm = hour >= 12 ? 'PM' : 'AM'; const display = hour % 12 || 12; return display+':'+m+' '+ampm; }
+  function mapsLink(street) { return 'https://www.google.com/maps/search/'+encodeURIComponent(street+', Cambridge, MA'); }
+  function escHtml(str) { return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function formatDate(ts) { if (!ts) return ''; return new Date(ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' }); }
   window.showPage = function(name) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
     if (name === 'admin-gate' && auth.currentUser) name = 'admin';
-    document.getElementById('page-' + name).classList.add('active');
-    const map = { listings: 0, submit: 1, why: 2, contact: 3, 'admin-gate': 4, admin: 4 };
+    document.getElementById('page-'+name).classList.add('active');
+    const map = { listings:0, submit:1, why:2, contact:3, 'admin-gate':4, admin:4 };
     if (map[name] !== undefined) document.querySelectorAll('nav button')[map[name]].classList.add('active');
     if (name === 'listings') renderListings();
     if (name === 'admin') renderAdmin();
   }
-
   async function renderListings() {
     const container = document.getElementById('listings-container');
     container.innerHTML = '<div class="loading-state">Loading listings...</div>';
     try {
-      const q = query(listingsCol, where('status', '==', 'approved'));
+      const q = query(listingsCol, where('status','==','approved'));
       const snap = await getDocs(q);
-      if (snap.empty) {
-        container.innerHTML = '<div class="empty-state">No listings yet — be the first to post your yard sale!</div>';
-        return;
-      }
-      container.innerHTML = snap.docs.map(d => {
-        const item = d.data();
-        const notesHtml = item.notes ? `<div class="notes">${escHtml(item.notes)}</div>` : '';
-        return `<div class="listing-card">
-          <div class="listing-icon">&#x1F3EA;</div>
-          <div class="listing-info">
-            <h3>${escHtml(item.street)}</h3>
-            <div class="time">${formatTime(item.start)} – ${formatTime(item.end)}</div>
-            ${notesHtml}
-            <a href="${mapsLink(item.street)}" target="_blank">View on Google Maps ↗</a>
-          </div>
-        </div>`;
-      }).join('');
-    } catch(e) {
-      container.innerHTML = '<div class="empty-state">Error loading listings. Please refresh.</div>';
-    }
+      if (snap.empty) { container.innerHTML = '<div class="empty-state">No listings yet — be the first to post your yard sale!</div>'; return; }
+      container.innerHTML = snap.docs.map(d => { const item = d.data(); const notesHtml = item.notes ? '<div class="notes">'+escHtml(item.notes)+'</div>' : ''; return '<div class="listing-card"><div class="listing-icon">&#x1F3EA;</div><div class="listing-info"><h3>'+escHtml(item.street)+'</h3><div class="time">'+formatTime(item.start)+' – '+formatTime(item.end)+'</div>'+notesHtml+'<a href="'+mapsLink(item.street)+'" target="_blank">View on Google Maps ↗</a></div></div>'; }).join('');
+    } catch(e) { container.innerHTML = '<div class="empty-state">Error loading listings. Please refresh.</div>'; }
   }
-
   async function renderAdmin() {
     document.getElementById('pending-container').innerHTML = '<div class="loading-state">Loading...</div>';
     document.getElementById('approved-admin-container').innerHTML = '<div class="loading-state">Loading...</div>';
     document.getElementById('messages-container').innerHTML = '<div class="loading-state">Loading...</div>';
     try {
       const snap = await getDocs(listingsCol);
-      const pending = [];
-      const approved = [];
-      snap.docs.forEach(d => {
-        const item = { id: d.id, ...d.data() };
-        if (item.status === 'pending') pending.push(item);
-        else if (item.status === 'approved') approved.push(item);
-      });
-
-      document.getElementById('pending-container').innerHTML = pending.length
-        ? pending.map(item => {
-            const notesHtml = item.notes ? `<div class="notes">${escHtml(item.notes)}</div>` : '';
-            return `<div class="pending-card">
-              <h3>${escHtml(item.street)}</h3>
-              <div class="time">${formatTime(item.start)} – ${formatTime(item.end)}</div>
-              ${notesHtml}
-              <div class="action-row">
-                <button class="btn-approve" onclick="window.approve('${item.id}')">Approve</button>
-                <button class="btn-reject" onclick="window.reject('${item.id}')">Reject</button>
-              </div>
-            </div>`;
-          }).join('')
-        : '<div class="empty-state">No pending submissions.</div>';
-
-      document.getElementById('approved-admin-container').innerHTML = approved.length
-        ? approved.map(item => {
-            const notesHtml = item.notes ? `<div class="notes">${escHtml(item.notes)}</div>` : '';
-            return `<div class="listing-card">
-              <div class="listing-icon">&#x1F3EA;</div>
-              <div class="listing-info">
-                <h3>${escHtml(item.street)}</h3>
-                <div class="time">${formatTime(item.start)} – ${formatTime(item.end)}</div>
-                ${notesHtml}
-                <a href="${mapsLink(item.street)}" target="_blank">View on Google Maps ↗</a>
-              </div>
-              <button class="btn-remove" onclick="window.removeListing('${item.id}')">Remove</button>
-            </div>`;
-          }).join('')
-        : '<div class="empty-state">No approved listings yet.</div>';
-    } catch(e) {
-      document.getElementById('pending-container').innerHTML = '<div class="empty-state">Error loading. Please refresh.</div>';
-    }
-
+      const pending = []; const approved = [];
+      snap.docs.forEach(d => { const item = { id: d.id, ...d.data() }; if (item.status==='pending') pending.push(item); else if (item.status==='approved') approved.push(item); });
+      document.getElementById('pending-container').innerHTML = pending.length ? pending.map(item => { const n = item.notes ? '<div class="notes">'+escHtml(item.notes)+'</div>' : ''; return '<div class="pending-card"><h3>'+escHtml(item.street)+'</h3><div class="time">'+formatTime(item.start)+' – '+formatTime(item.end)+'</div>'+n+'<div class="action-row"><button class="btn-approve" onclick="window.approve(''+item.id+'')">Approve</button><button class="btn-reject" onclick="window.reject(''+item.id+'')">Reject</button></div></div>'; }).join('') : '<div class="empty-state">No pending submissions.</div>';
+      document.getElementById('approved-admin-container').innerHTML = approved.length ? approved.map(item => { const n = item.notes ? '<div class="notes">'+escHtml(item.notes)+'</div>' : ''; return '<div class="listing-card"><div class="listing-icon">&#x1F3EA;</div><div class="listing-info"><h3>'+escHtml(item.street)+'</h3><div class="time">'+formatTime(item.start)+' – '+formatTime(item.end)+'</div>'+n+'<a href="'+mapsLink(item.street)+'" target="_blank">View on Google Maps ↗</a></div><button class="btn-remove" onclick="window.removeListing(''+item.id+'')">Remove</button></div>'; }).join('') : '<div class="empty-state">No approved listings yet.</div>';
+    } catch(e) { document.getElementById('pending-container').innerHTML = '<div class="empty-state">Error loading. Please refresh.</div>'; }
     try {
       const msgSnap = await getDocs(messagesCol);
       const messages = msgSnap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a,b) => b.submitted - a.submitted);
-      document.getElementById('messages-container').innerHTML = messages.length
-        ? messages.map(msg => `
-            <div class="message-card">
-              <div class="msg-meta"><strong>${escHtml(msg.name)}</strong> &lt;${escHtml(msg.email)}&gt; &mdash; ${formatDate(msg.submitted)}</div>
-              <div class="msg-body">${escHtml(msg.message)}</div>
-              <div class="action-row">
-                <button class="btn-delete" onclick="window.deleteMessage('${msg.id}')">Delete</button>
-              </div>
-            </div>`).join('')
-        : '<div class="empty-state">No messages yet.</div>';
-    } catch(e) {
-      document.getElementById('messages-container').innerHTML = '<div class="empty-state">Error loading messages.</div>';
-    }
+      document.getElementById('messages-container').innerHTML = messages.length ? messages.map(msg => '<div class="message-card"><div class="msg-meta"><strong>'+escHtml(msg.name)+'</strong> &lt;'+escHtml(msg.email)+'&gt; &mdash; '+formatDate(msg.submitted)+'</div><div class="msg-body">'+escHtml(msg.message)+'</div><div class="action-row"><button class="btn-delete" onclick="window.deleteMessage(''+msg.id+'')">Delete</button></div></div>').join('') : '<div class="empty-state">No messages yet.</div>';
+    } catch(e) { document.getElementById('messages-container').innerHTML = '<div class="empty-state">Error loading messages.</div>'; }
   }
-
   window.submitListing = async function() {
     const street = document.getElementById('input-street').value.trim();
     const start = document.getElementById('input-start').value;
     const end = document.getElementById('input-end').value;
     const notes = document.getElementById('input-notes').value.trim();
+    const submitterEmail = document.getElementById('input-email').value.trim();
     if (!street) { alert('Please enter a street name.'); return; }
-    const btn = document.getElementById('submit-btn');
-    btn.disabled = true;
-    btn.textContent = 'Submitting...';
+    const btn = document.getElementById('submit-btn'); btn.disabled = true; btn.textContent = 'Submitting...';
     try {
-      await addDoc(listingsCol, { street, start, end, notes, status: 'pending', submitted: Date.now() });
-      await emailjs.send('service_h0zuuxo', 'template_33ssz7x', {
-        street: street,
-        start: start,
-        end: end,
-        notes: notes || 'Not specified'
-      });
-      document.getElementById('input-street').value = '';
-      document.getElementById('input-notes').value = '';
-      document.getElementById('submit-success').style.display = 'block';
-      document.getElementById('submit-error').style.display = 'none';
+      await addDoc(listingsCol, { street, start, end, notes, submitterEmail, status: 'pending', submitted: Date.now() });
+      await emailjs.send('service_h0zuuxo','template_33ssz7x',{ street, start, end, notes: notes||'Not specified', submitter_email: submitterEmail||'Not provided' });
+      document.getElementById('input-street').value = ''; document.getElementById('input-notes').value = ''; document.getElementById('input-email').value = '';
+      document.getElementById('submit-success').style.display = 'block'; document.getElementById('submit-error').style.display = 'none';
       setTimeout(() => document.getElementById('submit-success').style.display = 'none', 5000);
-    } catch(e) {
-      document.getElementById('submit-error').style.display = 'block';
-    }
-    btn.disabled = false;
-    btn.textContent = 'Submit Listing';
+    } catch(e) { document.getElementById('submit-error').style.display = 'block'; }
+    btn.disabled = false; btn.textContent = 'Submit Listing';
   }
-
   window.submitContact = async function() {
     const name = document.getElementById('contact-name').value.trim();
     const email = document.getElementById('contact-email').value.trim();
     const message = document.getElementById('contact-message').value.trim();
-    if (!name || !email || !message) { alert('Please fill in all fields.'); return; }
-    const btn = document.getElementById('contact-btn');
-    btn.disabled = true;
-    btn.textContent = 'Sending...';
+    if (!name||!email||!message) { alert('Please fill in all fields.'); return; }
+    const btn = document.getElementById('contact-btn'); btn.disabled = true; btn.textContent = 'Sending...';
     try {
       await addDoc(messagesCol, { name, email, message, submitted: Date.now() });
-      await emailjs.send('service_h0zuuxo', 'template_7ed65nx', { from_name: name, from_email: email, message: message });
-      document.getElementById('contact-name').value = '';
-      document.getElementById('contact-email').value = '';
-      document.getElementById('contact-message').value = '';
-      document.getElementById('contact-success').style.display = 'block';
-      document.getElementById('contact-error').style.display = 'none';
+      await emailjs.send('service_h0zuuxo','template_7ed65nx',{ from_name: name, from_email: email, message });
+      document.getElementById('contact-name').value = ''; document.getElementById('contact-email').value = ''; document.getElementById('contact-message').value = '';
+      document.getElementById('contact-success').style.display = 'block'; document.getElementById('contact-error').style.display = 'none';
       setTimeout(() => document.getElementById('contact-success').style.display = 'none', 5000);
-    } catch(e) {
-      document.getElementById('contact-error').style.display = 'block';
-    }
-    btn.disabled = false;
-    btn.textContent = 'Send Message';
+    } catch(e) { document.getElementById('contact-error').style.display = 'block'; }
+    btn.disabled = false; btn.textContent = 'Send Message';
   }
-
-  window.approve = async function(id) {
-    await updateDoc(doc(db, 'listings', id), { status: 'approved' });
-    renderAdmin();
-  }
-
-  window.reject = async function(id) {
-    await deleteDoc(doc(db, 'listings', id));
-    renderAdmin();
-  }
-
-  window.removeListing = async function(id) {
-    if (!confirm('Remove this listing from the public page?')) return;
-    await deleteDoc(doc(db, 'listings', id));
-    renderAdmin();
-  }
-
-  window.deleteMessage = async function(id) {
-    if (!confirm('Delete this message?')) return;
-    await deleteDoc(doc(db, 'messages', id));
-    renderAdmin();
-  }
-
+  window.approve = async function(id) { await updateDoc(doc(db,'listings',id),{ status:'approved' }); renderAdmin(); }
+  window.reject = async function(id) { await deleteDoc(doc(db,'listings',id)); renderAdmin(); }
+  window.removeListing = async function(id) { if (!confirm('Remove this listing from the public page?')) return; await deleteDoc(doc(db,'listings',id)); renderAdmin(); }
+  window.deleteMessage = async function(id) { if (!confirm('Delete this message?')) return; await deleteDoc(doc(db,'messages',id)); renderAdmin(); }
   window.adminLogin = async function() {
     const email = document.getElementById('admin-email').value.trim();
     const pw = document.getElementById('admin-pw').value;
-    const btn = document.getElementById('login-btn');
-    btn.disabled = true;
-    btn.textContent = 'Signing in...';
-    try {
-      await signInWithEmailAndPassword(auth, email, pw);
-      document.getElementById('admin-email').value = '';
-      document.getElementById('admin-pw').value = '';
-      document.getElementById('login-error').style.display = 'none';
-      window.showPage('admin');
-    } catch(e) {
-      document.getElementById('login-error').style.display = 'block';
-    }
-    btn.disabled = false;
-    btn.textContent = 'Sign In';
+    const btn = document.getElementById('login-btn'); btn.disabled = true; btn.textContent = 'Signing in...';
+    try { await signInWithEmailAndPassword(auth, email, pw); document.getElementById('admin-email').value = ''; document.getElementById('admin-pw').value = ''; document.getElementById('login-error').style.display = 'none'; window.showPage('admin'); }
+    catch(e) { document.getElementById('login-error').style.display = 'block'; }
+    btn.disabled = false; btn.textContent = 'Sign In';
   }
-
-  window.adminLogout = async function() {
-    await signOut(auth);
-    window.showPage('admin-gate');
-  }
-
+  window.adminLogout = async function() { await signOut(auth); window.showPage('admin-gate'); }
   renderListings();
 </script>
 </body>
