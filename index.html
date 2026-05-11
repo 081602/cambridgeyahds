@@ -59,6 +59,7 @@
   .admin-section-title { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #888; border-bottom: 1px solid #ddd; padding-bottom: 0.5rem; margin: 2rem 0 1rem; display: flex; align-items: center; justify-content: space-between; }
   .admin-section-title:first-child { margin-top: 0; }
   .logout-btn { background: none; border: 1px solid #ccc; color: #666; padding: 0.35rem 0.9rem; font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 0.73rem; letter-spacing: 0.08em; text-transform: uppercase; border-radius: 3px; cursor: pointer; }
+  #map { height: 500px; width: 100%; border-radius: 4px; border: 1px solid #e0ddd6; }
   .why-card { background: #fff; border: 1px solid #e0ddd6; border-radius: 4px; padding: 2rem; }
   .why-card p { font-size: 1rem; line-height: 1.85; color: #2c2a24; margin-bottom: 1.25rem; }
   .why-card p:last-child { margin-bottom: 0; }
@@ -78,6 +79,7 @@
 <nav>
   <button class="active" onclick="showPage('listings')">Listings</button>
   <button onclick="showPage('submit')">Post Your Sale</button>
+  <button onclick="showPage('map')">Map</button>
   <button onclick="showPage('why')">Why CambridgeYAHDS</button>
   <button onclick="showPage('contact')">Contact Us</button>
   <button onclick="showPage('admin-gate')">Admin</button>
@@ -116,6 +118,11 @@
       <div class="success-msg" id="submit-success">Your listing has been submitted! It will appear on the public page once approved.</div>
       <div class="error-msg" id="submit-error">Something went wrong. Please try again.</div>
     </div>
+  </div>
+
+  <div id="page-map" class="page">
+    <div class="section-title">Yard Sale Map</div>
+    <div id="map"></div>
   </div>
 
   <div id="page-why" class="page">
@@ -184,6 +191,7 @@
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxPH2cpz1KeQwDetrXkwmafYwzzE42ZP8"></script>
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
   import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
@@ -233,10 +241,37 @@
     document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
     if (name === 'admin-gate' && auth.currentUser) name = 'admin';
     document.getElementById('page-' + name).classList.add('active');
-    const map = { listings: 0, submit: 1, why: 2, contact: 3, 'admin-gate': 4, admin: 4 };
+    const map = { listings: 0, submit: 1, map: 2, why: 3, contact: 4, 'admin-gate': 5, admin: 5 };
     if (map[name] !== undefined) document.querySelectorAll('nav button')[map[name]].classList.add('active');
     if (name === 'listings') renderListings();
     if (name === 'admin') renderAdmin();
+    if (name === 'map') initMap();
+  }
+
+  let mapInstance = null;
+  async function initMap() {
+    const q = query(listingsCol, where('status', '==', 'approved'));
+    const snap = await getDocs(q);
+    const geocoder = new google.maps.Geocoder();
+    const mapEl = document.getElementById('map');
+    mapInstance = new google.maps.Map(mapEl, {
+      center: { lat: 42.3736, lng: -71.1097 },
+      zoom: 13,
+      styles: [{ featureType: 'poi', stylers: [{ visibility: 'off' }] }]
+    });
+    snap.docs.forEach(d => {
+      const item = d.data();
+      geocoder.geocode({ address: item.street + ', Cambridge, MA' }, (results, status) => {
+        if (status === 'OK') {
+          new google.maps.Marker({
+            position: results[0].geometry.location,
+            map: mapInstance,
+            title: item.street,
+            icon: { path: google.maps.SymbolPath.CIRCLE, scale: 10, fillColor: '#e8a838', fillOpacity: 1, strokeColor: '#2c2a24', strokeWeight: 2 }
+          });
+        }
+      });
+    });
   }
 
   async function renderListings() {
