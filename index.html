@@ -373,6 +373,28 @@
     } catch(e) {
       document.getElementById('messages-container').innerHTML = '<div class="empty-state">Error loading messages.</div>';
     }
+
+    try {
+      const rejSnap = await getDocs(query(listingsCol, where('status', '==', 'rejected')));
+      const rejected = rejSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+      document.getElementById('rejected-admin-container').innerHTML = rejected.length
+        ? rejected.map(item => {
+            const notesHtml = item.notes ? `<div class="notes">${escHtml(item.notes)}</div>` : '';
+            const emailHtml = item.submitterEmail ? `<div class="time">&#x2709; <a href="mailto:${escHtml(item.submitterEmail)}" style="color:#888;">${escHtml(item.submitterEmail)}</a></div>` : '';
+            return `<div class="pending-card">
+              <h3>${escHtml(item.street)}</h3>
+              <div class="time">${formatTime(item.start)} – ${formatTime(item.end)}</div>
+              ${notesHtml}
+              ${emailHtml}
+              <div class="action-row">
+                <button class="btn-delete" onclick="window.deleteRejected('${item.id}')">Delete</button>
+              </div>
+            </div>`;
+          }).join('')
+        : '<div class="empty-state">No rejected submissions.</div>';
+    } catch(e) {
+      document.getElementById('rejected-admin-container').innerHTML = '<div class="empty-state">Error loading. Please refresh.</div>';
+    }
   }
 
   window.submitListing = async function() {
@@ -402,28 +424,6 @@
       setTimeout(() => document.getElementById('submit-success').style.display = 'none', 5000);
     } catch(e) {
       document.getElementById('submit-error').style.display = 'block';
-    }
-
-    try {
-      const rejSnap = await getDocs(query(listingsCol, where('status', '==', 'rejected')));
-      const rejected = rejSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-      document.getElementById('rejected-admin-container').innerHTML = rejected.length
-        ? rejected.map(item => {
-            const notesHtml = item.notes ? `<div class="notes">${escHtml(item.notes)}</div>` : '';
-            const emailHtml = item.submitterEmail ? `<div class="time">&#x2709; <a href="mailto:${escHtml(item.submitterEmail)}" style="color:#888;">${escHtml(item.submitterEmail)}</a></div>` : '';
-            return `<div class="pending-card">
-              <h3>${escHtml(item.street)}</h3>
-              <div class="time">${formatTime(item.start)} – ${formatTime(item.end)}</div>
-              ${notesHtml}
-              ${emailHtml}
-              <div class="action-row">
-                <button class="btn-delete" onclick="window.deleteRejected('${item.id}')">Delete</button>
-              </div>
-            </div>`;
-          }).join('')
-        : '<div class="empty-state">No rejected submissions.</div>';
-    } catch(e) {
-      document.getElementById('rejected-admin-container').innerHTML = '<div class="empty-state">Error loading. Please refresh.</div>';
     }    btn.disabled = false;
     btn.textContent = 'Submit Listing';
   }
