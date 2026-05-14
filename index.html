@@ -319,10 +319,12 @@
       document.getElementById('pending-container').innerHTML = pending.length
         ? pending.map(item => {
             const notesHtml = item.notes ? `<div class="notes">${escHtml(item.notes)}</div>` : '';
+            const emailHtml = item.submitterEmail ? `<div class="time">&#x2709; <a href="mailto:${escHtml(item.submitterEmail)}" style="color:#888;">${escHtml(item.submitterEmail)}</a></div>` : '';
             return `<div class="pending-card">
               <h3>${escHtml(item.street)}</h3>
               <div class="time">${formatTime(item.start)} – ${formatTime(item.end)}</div>
               ${notesHtml}
+              ${emailHtml}
               <div class="action-row">
                 <button class="btn-approve" onclick="window.approve('${item.id}')">Approve</button>
                 <button class="btn-reject" onclick="window.reject('${item.id}')">Reject</button>
