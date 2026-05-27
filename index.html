@@ -492,22 +492,25 @@ window._approvedItems = approved;
     if (!item) return;
     const card = document.querySelector('.listing-card[data-edit-id="' + id + '"]');
     if (!card) return;
-    card.innerHTML = '<div style="width:100%;padding:0.25rem 0">' +
-      '<div class="form-group" style="margin-bottom:0.8rem"><label>Street Name</label>' +
-      '<input type="text" id="edit-street-' + id + '" value="' + escHtml(item.street) + '" style="width:100%;padding:0.5rem 0.75rem;border:1px solid #ccc;border-radius:3px;font-family:Georgia,serif;font-size:0.95rem;background:#faf9f6"></div>' +
-      '<div class="form-group" style="margin-bottom:0.8rem"><label>Sale Hours</label>' +
-      '<div class="time-row"><input type="time" id="edit-start-' + id + '" value="' + escHtml(item.start) + '"><input type="time" id="edit-end-' + id + '" value="' + escHtml(item.end) + '"></div></div>' +
-      '<div class="form-group" style="margin-bottom:0.8rem"><label>Notes <span class="optional">optional</span></label>' +
-      '<textarea id="edit-notes-' + id + '" style="width:100%;padding:0.5rem 0.75rem;border:1px solid #ccc;border-radius:3px;font-family:Georgia,serif;font-size:0.95rem;background:#faf9f6;min-height:60px;resize:vertical">' + escHtml(item.notes || '') + '</textarea></div>' +
-      '<div class="action-row"><button class="btn-approve" onclick="window.saveListing(\'' + id + '\')">Save</button>' +
-      ' <button class="btn-reject" onclick="renderAdmin()">Cancel</button></div></div>';
+    window._currentEditId = id;
+    card.innerHTML = '<div style="width:100%;padding:0.25rem 0">'
+      + '<div class="form-group" style="margin-bottom:0.8rem"><label>Street Name</label>'
+      + '<input type="text" id="edit-street" value="' + escHtml(item.street) + '" style="width:100%;padding:0.5rem 0.75rem;border:1px solid #ccc;border-radius:3px;font-family:Georgia,serif;font-size:0.95rem;background:#faf9f6"></div>'
+      + '<div class="form-group" style="margin-bottom:0.8rem"><label>Sale Hours</label>'
+      + '<div class="time-row"><input type="time" id="edit-start" value="' + (item.start || '') + '"><input type="time" id="edit-end" value="' + (item.end || '') + '"></div></div>'
+      + '<div class="form-group" style="margin-bottom:0.8rem"><label>Notes <span class="optional">optional</span></label>'
+      + '<textarea id="edit-notes" style="width:100%;padding:0.5rem 0.75rem;border:1px solid #ccc;border-radius:3px;font-family:Georgia,serif;font-size:0.95rem;background:#faf9f6;min-height:60px;resize:vertical">' + escHtml(item.notes || '') + '</textarea></div>'
+      + '<div class="action-row"><button class="btn-approve" onclick="window.saveListing()">Save</button>'
+      + ' <button class="btn-reject" onclick="renderAdmin()">Cancel</button></div></div>';
   }
 
-  window.saveListing = async function(id) {
-    const street = document.getElementById('edit-street-' + id).value.trim();
-    const start = document.getElementById('edit-start-' + id).value;
-    const end = document.getElementById('edit-end-' + id).value;
-    const notes = document.getElementById('edit-notes-' + id).value.trim();
+  window.saveListing = async function() {
+    const id = window._currentEditId;
+    if (!id) return;
+    const street = document.getElementById('edit-street').value.trim();
+    const start = document.getElementById('edit-start').value;
+    const end = document.getElementById('edit-end').value;
+    const notes = document.getElementById('edit-notes').value.trim();
     if (!street) { alert('Please enter a street name.'); return; }
     await updateDoc(doc(db, 'listings', id), { street, start, end, notes });
     renderAdmin();
