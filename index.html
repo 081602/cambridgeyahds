@@ -482,12 +482,6 @@ window._approvedItems = approved;
     renderAdmin();
   }
 
-  window.adminLogin = async function() {
-    const email = document.getElementById('admin-email').value.trim();
-    const pw = document.getElementById('admin-pw').value;
-    const btn = document.getElementById('login-btn');
-    btn.disabled = true;
-    btn.textContent = '
   window.editListing = function(id) {
     const item = (window._approvedItems || []).find(i => i.id === id);
     if (!item) return;
@@ -515,7 +509,14 @@ window._approvedItems = approved;
     if (!street) { alert('Please enter a street name.'); return; }
     await updateDoc(doc(db, 'listings', id), { street, start, end, notes });
     renderAdmin();
-  }Signing in...';
+  }
+  
+  window.adminLogin = async function() {
+    const email = document.getElementById('admin-email').value.trim();
+    const pw = document.getElementById('admin-pw').value;
+    const btn = document.getElementById('login-btn');
+    btn.disabled = true;
+    btn.textContent = 'Signing in...';
     try {
       await signInWithEmailAndPassword(auth, email, pw);
       document.getElementById('admin-email').value = '';
