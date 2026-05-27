@@ -342,21 +342,22 @@ window._approvedItems = approved;
         ? approved.map(item => {
             const notesHtml = item.notes ? `<div class="notes">${escHtml(item.notes)}</div>` : '';
             const emailHtml = item.submitterEmail ? `<div class="time">&#x2709; <a href="mailto:${escHtml(item.submitterEmail)}" style="color:#888;">${escHtml(item.submitterEmail)}</a></div>` : '';
-            return `<div class="listing-card">
+            return `<div class="listing-card" data-edit-id="${item.id}">
               <div class="listing-icon">&#x1F3EA;</div>
               <div class="listing-info">
                 <h3>${escHtml(item.street)}</h3>
                 <div class="time">${formatTime(item.start)} – ${formatTime(item.end)}</div>
                 ${notesHtml}
-                ${email<div class="listing-card" data-edit-id="${item.id}">ref="${mapsLink(item.street)}" target="_blank">View on Google Maps ↗</a>
+                ${emailHtml}
+                <a href="${mapsLink(item.street)}" target="_blank">View on Google Maps ↗</a>
               </div>
+              <button class="btn-edit" onclick="window.editListing('${item.id}')">Edit</button>
               <button class="btn-remove" onclick="window.removeListing('${item.id}')">Remove</button>
             </div>`;
           }).join('')
         : '<div class="empty-state">No approved listings yet.</div>';
     } catch(e) {
-      document.getElementById('pending-container').innerHTML = '<div class="empty-state">Error loading. Please refresh.</div><button class="btn-edit" onclick="window.editListing('${item.id}')">Edit</button>
-              ';
+      document.getElementById('approved-admin-container').innerHTML = '<div class="empty-state">Error loading. Please refresh.</div>';
     }
 
     try {
