@@ -89,7 +89,7 @@
 
 <main>
   <div id="page-listings" class="page active">
-    <div class="section-title">Confirmed Yard Sales</div>
+    <div class="section-title">Confirmed Yard Sales (Sorted by Start Time)</div>
     <div id="listings-container"><div class="loading-state">Loading listings...</div></div>
   </div>
 
@@ -288,8 +288,8 @@
         container.innerHTML = '<div class="empty-state">No listings yet — be the first to post your yard sale!</div>';
         return;
       }
-      container.innerHTML = snap.docs.map(d => {
-        const item = d.data();
+      const listings = snap.docs.map(d => d.data()).sort((a, b) => (a.start || '').localeCompare(b.start || ''));
+      container.innerHTML = listings.map(item => {
         const notesHtml = item.notes ? `<div class="notes">${escHtml(item.notes)}</div>` : '';
         return `<div class="listing-card">
           <div class="listing-icon">&#x1F3EA;</div>
