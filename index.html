@@ -54,7 +54,8 @@
   .btn-reject { background: #fff; color: #a33; border: 1px solid #d99; padding: 0.45rem 1rem; font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 0.73rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; border-radius: 3px; cursor: pointer; }
   .btn-remove { background: #fff; color: #a33; border: 1px solid #d99; padding: 0.3rem 0.75rem; font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; border-radius: 3px; cursor: pointer; margin-left: auto; flex-shrink: 0; }
 
-  .btn-edit { background: #fff; color: #5a7fb5; border: 1px solid #b0c4de; padding: 0.3rem 0.75rem; font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; border-radius: 3px; cursor: pointer; }  .btn-delete { background: #fff; color: #a33; border: 1px solid #d99; padding: 0.3rem 0.75rem; font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; border-radius: 3px; cursor: pointer; }
+  .btn-edit { background: #fff; color: #5a7fb5; border: 1px solid #b0c4de; padding: 0.3rem 0.75rem; font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; border-radius: 3px; cursor: pointer; }  .btn-delete { background: #fff; color: #a33; border: 1px solid #d99; padding: 0.3rem 0.75rem; font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; border-radius: 3px; cursor: pointer; } 
+  .btn-export { background: #2d6a2d; color: #fff; border: none; padding: 0.3rem 0.9rem; font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; border-radius: 3px; cursor: pointer; }
   .page { display: none; }
   .page.active { display: block; }
   .admin-section-title { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #888; border-bottom: 1px solid #ddd; padding-bottom: 0.5rem; margin: 2rem 0 1rem; display: flex; align-items: center; justify-content: space-between; }
@@ -184,7 +185,7 @@
       <button class="logout-btn" onclick="adminLogout()">Log out</button>
     </div>
     <div id="pending-container"><div class="loading-state">Loading...</div></div>
-    <div class="admin-section-title"><span>Approved Listings</span></div>
+    <div class="admin-section-title"><span>Approved Listings</span><button class="btn-export" onclick="window.exportListings()">Export CSV</button></div>
     <div id="approved-admin-container"><div class="loading-state">Loading...</div></div>
     <div class="admin-section-title"><span>Contact Messages</span></div>
     <div id="messages-container"><div class="loading-state">Loading...</div></div>
@@ -511,6 +512,34 @@ window._approvedItems = approved;
     renderAdmin();
   }
   
+  window.exportListings = function() {
+    const items = window._approvedItems || [];
+    if (!items.length) { alert('No approved listings to export.'); return; }
+    const header = ['Street', 'Sale Start', 'Sale End', 'Submitter Email'];
+    const rows = items.map(function(item) {
+      return [
+        item.street || '',
+        item.start || '',
+        item.end || '',
+        item.submitterEmail || ''
+      ];
+    });
+    const csv = [header].concat(rows).map(function(row) {
+      return row.map(function(cell) {
+        return '"' + String(cell).replace(/"/g, '""') + '"';
+      }).join(',');
+    }).join('\r\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'cambridgeyahds-approved-listings.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
   window.adminLogin = async function() {
     const email = document.getElementById('admin-email').value.trim();
     const pw = document.getElementById('admin-pw').value;
