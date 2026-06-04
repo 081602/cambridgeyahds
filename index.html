@@ -82,8 +82,9 @@
   <button class="active" onclick="showPage('listings')">Listings</button>
   <button onclick="showPage('submit')">Post Your Sale</button>
   <button onclick="showPage('map')">Map</button>
-  <button onclick="showPage('why')">Why CambridgeYAHDS</button>
   <button onclick="showPage('contact')">Contact Us</button>
+  <button onclick="showPage('inform')">Stay Informed</button>
+  <button onclick="showPage('why')">Why CambridgeYAHDS</button>
   <button onclick="showPage('admin-gate')">Admin</button>
 </nav>
 
@@ -161,6 +162,21 @@
     </div>
   </div>
 
+
+  <div id="page-inform" class="page">
+    <div class="section-title">Stay Informed</div>
+    <div class="form-card">
+      <p class="intro">Sign up to hear about future Cambridge Community Yard Sale Days. We'll reach out before the next one.</p>
+      <div class="form-group">
+        <label>Your Email Address</label>
+        <input type="email" id="subscriber-email" placeholder="e.g. jane@example.com">
+      </div>
+      <button class="submit-btn" id="subscriber-btn" onclick="submitSubscriber()">Sign Me Up</button>
+      <div class="success-msg" id="subscriber-success">You're on the list! We'll be in touch before the next Cambridge Yard Sale Day.</div>
+      <div class="error-msg" id="subscriber-error">Something went wrong. Please try again.</div>
+    </div>
+  </div>
+
   <div id="page-admin-gate" class="page">
     <div class="admin-login">
       <div class="admin-card">
@@ -191,6 +207,8 @@
     <div id="messages-container"><div class="loading-state">Loading...</div></div>
     <div class="admin-section-title"><span>Rejected Submissions</span></div>
     <div id="rejected-admin-container"><div class="loading-state">Loading...</div></div>
+    <div class="admin-section-title"><span>Mailing List Subscribers</span><button class="btn-export" onclick="window.exportSubscribers()">Export CSV</button></div>
+    <div id="subscribers-container"><div class="loading-state">Loading...</div></div>
   </div>
 </main>
 
@@ -198,7 +216,7 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxPH2cpz1KeQwDetrXkwmafYwzzE42ZP8"></script>
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
   import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
   const firebaseConfig = {
@@ -215,6 +233,7 @@
   const auth = getAuth(app);
   const listingsCol = collection(db, 'listings');
   const messagesCol = collection(db, 'messages');
+  const subscribersCol = collection(db, 'subscribers');
 
   emailjs.init('SH-gloD3QGncR2gDb');
 
@@ -245,7 +264,7 @@
     document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
     if (name === 'admin-gate' && auth.currentUser) name = 'admin';
     document.getElementById('page-' + name).classList.add('active');
-    const map = { listings: 0, submit: 1, map: 2, why: 3, contact: 4, 'admin-gate': 5, admin: 5 };
+    const map = { listings: 0, submit: 1, map: 2, contact: 3, inform: 4, why: 5, 'admin-gate': 6, admin: 6 };
     if (map[name] !== undefined) document.querySelectorAll('nav button')[map[name]].classList.add('active');
     if (name === 'listings') renderListings();
     if (name === 'admin') renderAdmin();
@@ -311,6 +330,7 @@
     document.getElementById('approved-admin-container').innerHTML = '<div class="loading-state">Loading...</div>';
     document.getElementById('messages-container').innerHTML = '<div class="loading-state">Loading...</div>';
       document.getElementById('rejected-admin-container').innerHTML = '<div class="loading-state">Loading...</div>';
+    document.getElementById('subscribers-container').innerHTML = '<div class="loading-state">Loading...</div>';
     try {
       const snap = await getDocs(listingsCol);
       const pending = [];
@@ -398,6 +418,22 @@ window._approvedItems = approved;
         : '<div class="empty-state">No rejected submissions.</div>';
     } catch(e) {
       document.getElementById('rejected-admin-container').innerHTML = '<div class="empty-state">Error loading. Please refresh.</div>';
+    }
+
+    try {
+      const subSnap = await getDocs(query(subscribersCol, orderBy('subscribedAt', 'asc')));
+      const subscribers = subSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+      window._subscribers = subscribers;
+      document.getElementById('subscribers-container').innerHTML = subscribers.length
+        ? subscribers.map(s => `<div class="pending-card">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem">
+              <div>&#x2709; <a href="mailto:${escHtml(s.email)}" style="color:#555;font-family:Georgia,serif;">${escHtml(s.email)}</a></div>
+              <div class="time" style="white-space:nowrap">${s.subscribedAt ? new Date(s.subscribedAt).toLocaleDateString('en-US', {month:'short',day:'numeric',year:'numeric'}) : ''}</div>
+            </div>
+          </div>`).join('')
+        : '<div class="empty-state">No subscribers yet.</div>';
+    } catch(e) {
+      document.getElementById('subscribers-container').innerHTML = '<div class="empty-state">Error loading. Please refresh.</div>';
     }
   }
 
@@ -534,6 +570,58 @@ window._approvedItems = approved;
     const a = document.createElement('a');
     a.href = url;
     a.download = 'cambridgeyahds-approved-listings.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+
+  window.submitSubscriber = async function() {
+    const emailVal = document.getElementById('subscriber-email').value.trim();
+    const btn = document.getElementById('subscriber-btn');
+    const success = document.getElementById('subscriber-success');
+    const error = document.getElementById('subscriber-error');
+    success.style.display = 'none';
+    error.style.display = 'none';
+    if (!emailVal || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
+      alert('Please enter a valid email address.');
+      return;
+    }
+    btn.disabled = true;
+    btn.textContent = 'Signing up...';
+    try {
+      await addDoc(subscribersCol, { email: emailVal, subscribedAt: Date.now() });
+      btn.style.display = 'none';
+      document.getElementById('subscriber-email').style.display = 'none';
+      success.style.display = 'block';
+    } catch(e) {
+      error.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Sign Me Up';
+    }
+  }
+
+  window.exportSubscribers = function() {
+    const items = window._subscribers || [];
+    if (!items.length) { alert('No subscribers to export.'); return; }
+    const header = ['Email', 'Date Subscribed'];
+    const rows = items.map(function(s) {
+      return [
+        s.email || '',
+        s.subscribedAt ? new Date(s.subscribedAt).toLocaleDateString('en-US') : ''
+      ];
+    });
+    const csv = [header].concat(rows).map(function(row) {
+      return row.map(function(cell) {
+        return '"' + String(cell).replace(/"/g, '""') + '"';
+      }).join(',');
+    }).join('\r\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'cambridgeyahds-subscribers.csv';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
