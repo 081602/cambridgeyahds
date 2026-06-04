@@ -592,6 +592,7 @@ window._approvedItems = approved;
     btn.textContent = 'Signing up...';
     try {
       await addDoc(subscribersCol, { email: emailVal, subscribedAt: Date.now() });
+      await emailjs.send('service_h0zuuxo', 'template_p852ja6', { email: emailVal });
       btn.style.display = 'none';
       document.getElementById('subscriber-email').style.display = 'none';
       success.style.display = 'block';
