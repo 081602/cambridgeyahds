@@ -210,6 +210,7 @@
       <button class="logout-btn" onclick="adminLogout()">Log out</button>
     </div>
     <div id="pending-container"><div class="loading-state">Loading...</div></div>
+    <div id="full-admin-sections">
     <div class="admin-section-title"><span>Approved Listings</span><button class="btn-export" onclick="window.exportListings()">Export CSV</button></div>
     <div id="approved-admin-container"><div class="loading-state">Loading...</div></div>
     <div class="admin-section-title"><span>Contact Messages</span></div>
@@ -220,6 +221,7 @@
     <div id="subscribers-container"><div class="loading-state">Loading...</div></div>
     <div class="admin-section-title"><span>Archived Events</span></div>
     <div id="archived-events-container"><div class="loading-state">Loading...</div></div>
+    </div>
   </div>
 </main>
 
@@ -337,6 +339,9 @@
   }
 
   async function renderAdmin() {
+    const FULL_ADMINS = ['jaime@dalmeida.org'];
+    const isFullAdmin = FULL_ADMINS.includes(((auth.currentUser && auth.currentUser.email) || '').toLowerCase());
+    document.getElementById('full-admin-sections').style.display = isFullAdmin ? '' : 'none';
     document.getElementById('pending-container').innerHTML = '<div class="loading-state">Loading...</div>';
     document.getElementById('approved-admin-container').innerHTML = '<div class="loading-state">Loading...</div>';
     document.getElementById('messages-container').innerHTML = '<div class="loading-state">Loading...</div>';
@@ -392,6 +397,8 @@ window._approvedItems = approved;
     } catch(e) {
       document.getElementById('approved-admin-container').innerHTML = '<div class="empty-state">Error loading. Please refresh.</div>';
     }
+
+    if (!isFullAdmin) return; // moderators only see Pending Approvals
 
     try {
       const msgSnap = await getDocs(messagesCol);
