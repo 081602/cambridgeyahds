@@ -220,6 +220,19 @@
     <div id="rejected-admin-container"><div class="loading-state">Loading...</div></div>
     <div class="admin-section-title"><span>Mailing List Subscribers</span><button class="btn-export" onclick="window.exportSubscribers()">Export CSV</button></div>
     <div id="subscribers-container"><div class="loading-state">Loading...</div></div>
+    <div class="admin-section-title"><span>Email the Mailing List</span></div>
+    <div class="form-card" style="margin-bottom:1rem">
+      <div class="form-group">
+        <label>Subject</label>
+        <input type="text" id="broadcast-subject" placeholder="e.g. Cambridge YAHDS is back — October 4!">
+      </div>
+      <div class="form-group">
+        <label>Message</label>
+        <textarea id="broadcast-message" rows="8" placeholder="Write your announcement... (plain text; an unsubscribe note is added automatically by the email template)"></textarea>
+      </div>
+      <button class="submit-btn" id="broadcast-btn" onclick="window.sendBroadcast()">Send to Mailing List</button>
+      <div id="broadcast-status" style="margin-top:0.75rem;font-family:'Helvetica Neue',Arial,sans-serif;font-size:0.85rem;color:#555"></div>
+    </div>
     <div class="admin-section-title"><span>Archived Events</span></div>
     <div id="archived-events-container"><div class="loading-state">Loading...</div></div>
     </div>
@@ -683,6 +696,40 @@ window._approvedItems = approved;
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+  }
+
+  const BROADCAST_TEMPLATE = 'template_b6rwjuj';
+  window.sendBroadcast = async function() {
+    const subs = window._subscribers || [];
+    const subject = document.getElementById('broadcast-subject').value.trim();
+    const message = document.getElementById('broadcast-message').value.trim();
+    const status = document.getElementById('broadcast-status');
+    if (BROADCAST_TEMPLATE.indexOf('template_') !== 0) { alert('The broadcast email template has not been configured yet.'); return; }
+    if (!subject || !message) { alert('Please enter a subject and a message.'); return; }
+    if (!subs.length) { alert('No subscribers to email.'); return; }
+    if (!confirm('Send this email to ' + subs.length + ' subscriber' + (subs.length === 1 ? '' : 's') + '?')) return;
+    const btn = document.getElementById('broadcast-btn');
+    btn.disabled = true;
+    let sent = 0;
+    const failed = [];
+    for (const s of subs) {
+      status.textContent = 'Sending ' + (sent + failed.length + 1) + ' of ' + subs.length + '...';
+      try {
+        await emailjs.send('service_h0zuuxo', BROADCAST_TEMPLATE, { to_email: s.email, subject: subject, message: message });
+        sent++;
+      } catch(e) {
+        failed.push(s.email);
+      }
+      await new Promise(r => setTimeout(r, 1200)); // stay under EmailJS ~1 req/sec rate limit
+    }
+    btn.disabled = false;
+    if (failed.length) {
+      status.textContent = 'Done: ' + sent + ' sent, ' + failed.length + ' failed: ' + failed.join(', ');
+    } else {
+      status.textContent = 'Done! Sent to all ' + sent + ' subscribers.';
+      document.getElementById('broadcast-subject').value = '';
+      document.getElementById('broadcast-message').value = '';
+    }
   }
 
   window.adminLogin = async function() {
