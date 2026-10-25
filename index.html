@@ -485,7 +485,8 @@ window._approvedItems = approved;
       } else {
         document.getElementById('archived-events-container').innerHTML = eventDates.map(date => {
           const items = groups[date];
-          const label = date === '2026-06-06' ? 'June 6, 2026' : date;
+          const labels = { '2026-06-06': 'June 6, 2026', '2026-10-04': 'October 4, 2026' };
+          const label = labels[date] || date;
           const rows = items.sort((a,b) => (a.start||'').localeCompare(b.start||'')).map(item =>
             `<div class="pending-card" style="margin-bottom:0.5rem">
               <strong>${escHtml(item.street)}</strong>
